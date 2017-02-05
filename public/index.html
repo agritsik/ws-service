@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script type="application/javascript">
+        const ws = new WebSocket('ws://localhost:3000');
+        ws.onopen = (event) => print('connection is established...');
+        ws.onmessage = (event) => print(event.data);
+
+        function print(m) {
+            document.getElementById('console').innerHTML
+                    += '<kbd>' + m + '</kbd><br/>';
+        }
+
+        function sendLike() {
+            ws.send('like');
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <input class="btn btn-primary" onclick="return sendLike();" value="like"/>
+    <hr/>
+    <pre id="console"></pre>
+</div>
+</body>
+</html>
+
+
+
