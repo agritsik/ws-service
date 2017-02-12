@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+<div class="container" id="container"></div>
+<script type="text/javascript">
+    let chart;
+
+    const ws = new WebSocket('ws://localhost:3000');
+    ws.onopen = (event) => console.log('connection is established...');
+    ws.onmessage = (event) => {
+        var points = JSON.parse(event.data);
+        chart.series[0].addPoint(points[0], true, true);
+        chart.series[1].addPoint(points[1], true, true);
+        chart.series[2].addPoint(points[2], true, true);
+        // todo: add throttling
+    };
+
+    $(function () {
+        var options = {
+            chart: {type: 'spline', animation: Highcharts.svg},
+            title: {text: 'Total Views'},
+            xAxis: {type: 'datetime'},
+            yAxis: {title: {text: 'Count'}},
+            series: [{name: 'Cyprus'}, {name: 'Turkey'}, {name: 'Spain'}]
+        };
+
+        $.getJSON('http://localhost:3000/orders').then((data) => {
+            options.series[0].data = data[0];
+//            options.series[1].data = data[1];
+//            options.series[2].data = data[2];
+            chart = Highcharts.chart('container', options);
+        });
+
+    });
+</script>
+</body>
+</html>
+
+
+
