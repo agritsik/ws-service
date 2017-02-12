@@ -3,27 +3,43 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
     <script type="application/javascript">
-        const ws = new WebSocket('ws://localhost:3000');
-        ws.onopen = (event) => print('connection is established...');
-        ws.onmessage = (event) => print(event.data);
-
-        function print(m) {
-            document.getElementById('console').innerHTML
-                    += '<kbd>' + m + '</kbd><br/>';
-        }
-
-        function sendLike() {
-            ws.send('like');
-        }
+        //        const ws = new WebSocket('ws://localhost:3000');
+        //        ws.onopen = (event) => print('connection is established...');
+        //        ws.onmessage = (event) => print(event.data);
     </script>
 </head>
 <body>
-<div class="container">
-    <input class="btn btn-primary" onclick="return sendLike();" value="like"/>
-    <hr/>
-    <pre id="console"></pre>
-</div>
+<div class="container" id="container"></div>
+<script type="text/javascript">
+    let chart;
+
+    const ws = new WebSocket('ws://localhost:3000');
+    ws.onopen = (event) => console.log('connection is established...');
+    ws.onmessage = (event) => {
+        var p = JSON.parse(event.data);
+        chart.series[0].addPoint(p, true, true);
+    };
+
+    $(function () {
+        var options = {
+            chart: {type: 'area'},
+            title: {text: 'Cyprus Views'},
+            xAxis: {type: 'datetime'},
+            yAxis: {title: {text: 'Count'}},
+            series: [{}]
+        };
+
+        $.getJSON('http://localhost:3000/orders').then((data) => {
+            options.series[0].data = data;
+            chart = Highcharts.chart('container', options);
+        });
+
+    });
+</script>
 </body>
 </html>
 
