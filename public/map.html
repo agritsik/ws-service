@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/maps/highmaps.js"></script>
+    <script src="https://code.highcharts.com/mapdata/custom/europe.js"></script>
+</head>
+<body>
+<div class="container" id="container"></div>
+<script type="text/javascript">
+
+    $(function () {
+
+        let options = {
+            chart: {height: 800},
+
+            title: {
+                text: 'Highmaps basic demo'
+            },
+
+            subtitle: {
+                text: 'Source map: <a href="https://code.highcharts.com/mapdata/custom/europe.js">Europe</a>'
+            },
+
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+
+            colorAxis: {
+                min: 0
+            },
+
+            series: [{
+                data: [
+                    {"hc-key": "it", "value": 0},
+                    {"hc-key": "es", "value": 15},
+                    {"hc-key": "gr", "value": 20},
+                    {"hc-key": "tr", "value": 30},
+                ],
+                mapData: Highcharts.maps['custom/europe'],
+                joinBy: 'hc-key',
+                name: 'Random data',
+                states: {
+                    hover: {
+                        color: '#a4edba'
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}'
+                }
+            }]
+        };
+
+        chart = Highcharts.mapChart('container', options);
+
+        let v = 1;
+        const ws = new WebSocket('ws://localhost:3000');
+        ws.onopen = (event) => console.log('connection is established...');
+        ws.onmessage = (event) => {
+            console.log(event.data);
+            chart.series[0].addPoint({"hc-key": "it", "value": 5 * v++}, true, false);
+        };
+    });
+
+</script>
+</body>
+</html>
+
+
+
