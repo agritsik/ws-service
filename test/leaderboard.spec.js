@@ -1,4 +1,4 @@
-const redis = require('redis').createClient();
+const redis = require('redis').createClient(6379, '192.168.99.100');
 const expect = require('chai').expect;
 
 const KEY = 'top:orders';
