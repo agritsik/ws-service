@@ -18,6 +18,7 @@
   "homepage": "https://github.com/agritsik/ws-service#readme",
   "dependencies": {
     "express": "^4.14.1",
+    "kafka-node": "^1.4.0",
     "redis": "^2.6.5",
     "ws": "^2.0.2"
   },
